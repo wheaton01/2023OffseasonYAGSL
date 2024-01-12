@@ -16,12 +16,21 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.ExemptionMechanism;
+
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -33,6 +42,11 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase
 {
+  //LIMELIGHT INFO!
+NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+NetworkTableEntry tx = table.getEntry("tx");
+NetworkTableEntry ty = table.getEntry("ty");
+NetworkTableEntry ta = table.getEntry("ta");
 
   /**
    * Swerve drive object.
@@ -68,6 +82,9 @@ public class SwerveSubsystem extends SubsystemBase
     System.out.println("\t\"angle\": " + angleConversionFactor + ",");
     System.out.println("\t\"drive\": " + driveConversionFactor);
     System.out.println("}");
+
+
+    
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
@@ -115,6 +132,14 @@ public class SwerveSubsystem extends SubsystemBase
                       fieldRelative,
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
+  //LIMELIGHT DRIVE
+  public double getLimelightX(){
+    return tx.getDouble(0.0);  }
+  public double getLimelightY(){
+    return ty.getDouble(0.0);  }
+  public double getLimelightA(){
+    return ta.getDouble(0.0);
+  }
 
   /**
    * Drive the robot given a chassis field oriented velocity.
@@ -135,10 +160,20 @@ public class SwerveSubsystem extends SubsystemBase
   {
     swerveDrive.drive(velocity);
   }
-
+  Rotation2d aPitch;
+  Rotation2d aYaw ;
+  Rotation2d aRoll ;
   @Override
   public void periodic()
   {
+    aPitch= swerveDrive.getPitch();
+    aRoll= swerveDrive.getRoll();
+    aYaw= swerveDrive.getYaw();
+    
+    SmartDashboard.putNumber("Gyro PITCH",aPitch.getDegrees());
+    SmartDashboard.putNumber("Gyro YAW",  aYaw.getDegrees());
+    SmartDashboard.putNumber("Gyro Roll", aRoll.getDegrees());
+
   }
 
   @Override
@@ -238,6 +273,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, double headingX, double headingY)
   {
+    
     xInput = Math.pow(xInput, 3);
     yInput = Math.pow(yInput, 3);
     return swerveDrive.swerveController.getTargetSpeeds(xInput, yInput, headingX, headingY, getHeading().getRadians(), maximumSpeed);  

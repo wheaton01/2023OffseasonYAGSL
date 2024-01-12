@@ -123,11 +123,11 @@ public class SwerveDrive
   /**
    * The absolute max speed that your robot can reach while translating in meters per second.
    */
-  private       double                   attainableMaxTranslationalSpeedMetersPerSecond  = 5;
+  private       double                   attainableMaxTranslationalSpeedMetersPerSecond  = 10;
   /**
    * The absolute max speed the robot can reach while rotating radians per second.
    */
-  private       double                   attainableMaxRotationalVelocityRadiansPerSecond = 5;
+  private       double                   attainableMaxRotationalVelocityRadiansPerSecond = 10;
   /**
    * Maximum speed of the robot in meters per second.
    */

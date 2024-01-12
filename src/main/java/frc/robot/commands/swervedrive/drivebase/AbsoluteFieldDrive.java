@@ -72,9 +72,12 @@ public class AbsoluteFieldDrive extends CommandBase
                                            swerve.getSwerveDriveConfiguration());
     SmartDashboard.putNumber("LimitedTranslation", translation.getX());
     SmartDashboard.putString("Translation", translation.toString());
-
-    // Make the robot move
-    swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
+    SmartDashboard.putNumber("deisred Speed", desiredSpeeds.omegaRadiansPerSecond);
+//VALUE FOR HEADING JPW : -heading.getAsDouble()*Math.PI
+    // Make the robot move 
+    //ORIGINAL VALUE: desiredSpeeds.omegaRadiansPerSecond
+    
+    swerve.drive(translation, -heading.getAsDouble()*Math.PI , true);
 
   }
 

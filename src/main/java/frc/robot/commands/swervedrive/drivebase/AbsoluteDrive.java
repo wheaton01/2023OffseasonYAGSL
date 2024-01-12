@@ -76,6 +76,7 @@ public class AbsoluteDrive extends CommandBase
                                                          headingVertical.getAsDouble());
 
     // Prevent Movement After Auto
+
     if(initRotation)
     {
       if(headingHorizontal.getAsDouble() == 0 && headingVertical.getAsDouble() == 0)
@@ -97,7 +98,9 @@ public class AbsoluteDrive extends CommandBase
                                            swerve.getSwerveDriveConfiguration());
     SmartDashboard.putNumber("LimitedTranslation", translation.getX());
     SmartDashboard.putString("Translation", translation.toString());
-
+    SmartDashboard.putNumber("DESIRED ROTATION",desiredSpeeds.omegaRadiansPerSecond);
+    SmartDashboard.putNumber("Horizontal Heading",headingHorizontal.getAsDouble() );
+    
     // Make the robot move
     swerve.drive(translation, desiredSpeeds.omegaRadiansPerSecond, true);
 
